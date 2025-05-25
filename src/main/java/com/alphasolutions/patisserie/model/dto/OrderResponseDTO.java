@@ -1,26 +1,39 @@
 package com.alphasolutions.patisserie.model.dto;
 
-import com.alphasolutions.patisserie.Enum.OrderStatus;
-import lombok.AllArgsConstructor;
+import com.alphasolutions.patisserie.model.entities.Product;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-@Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
 public class OrderResponseDTO {
     private String name;
-    private Integer quantity;
-    private Double totalPrice;
-    private OffsetDateTime orderDate;
     private String orderCode;
-    private List<OrderItemDTO> orderItems;
-    private OrderStatus orderStatus;
+    private String orderStatus;
+    private OffsetDateTime orderDate;
+    private List<ProductDTO> products;
+    private Double totalPrice;
 
+    @Getter
+    @Setter
+    public static class ProductDTO {
+        private Integer id;
+        private String name;
+        private Double price;
+        private String category;
+        private String imagePath;
+        private Integer quantity;
+
+        public ProductDTO(Product product, Integer quantity) {
+            this.id = product.getId();
+            this.name = product.getName();
+            this.price = product.getPrice();
+            this.category = product.getCategory();
+            this.imagePath = product.getImagePath();
+            this.quantity = quantity;
+        }
+    }
 }

@@ -31,7 +31,7 @@ public class OrderMapper {
         dto.setTotalPrice(total);
         dto.setOrderCode(order.getOrderCode());
         dto.setOrderDate(order.getDateTime());
-        dto.setOrderItems(itemDTOs);
+        dto.setProducts(itemDTOs);
 
         return dto;
     }

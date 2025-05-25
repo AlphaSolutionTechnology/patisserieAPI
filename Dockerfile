@@ -1,5 +1,5 @@
 # Use uma imagem base do OpenJDK com Maven para build
-FROM maven:3.8.6-openjdk-17-slim AS builder
+FROM maven:3.8.6-eclipse-temurin:17-jdk-alpine AS builder
 
 # Define o diretório de trabalho
 WORKDIR /app

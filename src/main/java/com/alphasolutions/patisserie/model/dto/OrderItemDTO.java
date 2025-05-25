@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderItemDTO {
-    private Integer productId;
+    private Integer id;
     private Integer quantity;
 }

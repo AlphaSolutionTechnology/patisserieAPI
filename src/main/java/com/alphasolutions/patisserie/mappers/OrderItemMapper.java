@@ -18,8 +18,8 @@ public class OrderItemMapper {
     }
 
     public OrderItem fromDTO(OrderItemDTO dto, Order order) {
-        Product product = productRepository.findById(dto.getProductId())
-                .orElseThrow(() -> new IllegalArgumentException("Produto com ID " + dto.getProductId() + " não encontrado."));
+        Product product = productRepository.findById(dto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Produto com ID " + dto.getId() + " não encontrado."));
 
         OrderItem orderItem = new OrderItem();
         orderItem.setOrder(order);

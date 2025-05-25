@@ -9,7 +9,7 @@ COPY pom.xml .
 COPY src ./src
 
 # Executa o build do Maven para gerar o .jar
-RUN mvn clean package -DskipTests
+RUN mvn clean package
 
 # Etapa final: Usa uma imagem leve para rodar a aplicação
 FROM eclipse-temurin:17-jdk-focal

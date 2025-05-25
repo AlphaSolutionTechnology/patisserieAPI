@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Setter
@@ -17,8 +18,9 @@ public class OrderResponseDTO {
     private String name;
     private Integer quantity;
     private Double totalPrice;
-    private LocalDate orderDate;
+    private OffsetDateTime orderDate;
     private String orderCode;
     private List<OrderItemDTO> orderItems;
     private OrderStatus orderStatus;
+
 }

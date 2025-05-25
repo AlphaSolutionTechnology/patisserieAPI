@@ -32,4 +32,5 @@ public class OrderItem {
     @Column(name = "unit_price", nullable = false)
     private Double unitPrice;
 
+
 }

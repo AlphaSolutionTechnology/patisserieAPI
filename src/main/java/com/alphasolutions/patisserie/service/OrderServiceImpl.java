@@ -1,5 +1,6 @@
 package com.alphasolutions.patisserie.service;
 
+import com.alphasolutions.patisserie.Enum.OrderStatus;
 import com.alphasolutions.patisserie.mappers.OrderItemMapper;
 import com.alphasolutions.patisserie.mappers.OrderMapper;
 import com.alphasolutions.patisserie.model.dto.OrderRequestDTO;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -34,25 +36,46 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void createOrder(OrderRequestDTO order) {
+    public OrderResponseDTO createOrder(OrderRequestDTO order) {
         Random random = new Random();
         String randomValue;
         do {
             randomValue = String.format("%06d", random.nextInt(1_000_000));
         } while (orderRepository.findByOrderCode(randomValue).isPresent());
 
+
         Order orderEntity = new Order();
         orderEntity.setOrderCode(randomValue);
-        orderEntity.setUser(order.getUser());
+        orderEntity.setUser(userRepository.findUserByUserCode(order.getUserCode()));
         orderEntity.setDateTime(order.getDateTime());
-        orderRepository.save(orderEntity);
+        orderEntity.setPaymentMethod(order.getPaymentMethod());
+        orderEntity.setAddress(order.getAddress());
+        orderEntity.setOrderStatus(OrderStatus.preparing.status);
+        Order thisOrder = orderRepository.save(orderEntity);
 
         List<OrderItem> orderItemList = order.getItems().stream()
                 .map(itemDTO -> orderItemMapper.fromDTO(itemDTO, orderEntity))
                 .toList();
-
         orderItemRepository.saveAll(orderItemList);
-    }
+        OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
+        orderResponseDTO.setName(orderEntity.getUser().getUsername());
+        orderResponseDTO.setOrderCode(orderEntity.getOrderCode());
+        orderResponseDTO.setOrderStatus(OrderStatus.preparing);
+        orderResponseDTO.setOrderItems(order.getItems());
+        orderResponseDTO.setOrderDate(orderEntity.getDateTime());
+        List<OrderItem> orderItems = (orderItemRepository
+                .findByOrderId(thisOrder.getId()));
+        orderResponseDTO.setTotalPrice(
+                orderItems
+                .stream()
+                .map(OrderItem :: getUnitPrice)
+                .filter(Objects::nonNull)
+                .mapToDouble(Double::doubleValue)
+                .sum()
+                );
+
+        return orderResponseDTO;
+  }
 
     @Override
     public List<OrderResponseDTO> getAllOrders(String userCode) {

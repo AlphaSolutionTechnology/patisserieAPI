@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "\"order\"")
@@ -21,7 +22,16 @@ public class Order {
     private String orderCode;
 
     @Column(name = "date_time", nullable = false)
-    private LocalDateTime dateTime;
+    private OffsetDateTime dateTime;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "payment_method")
+    private Integer paymentMethod;
+
+    @Column(name = "order_status")
+    private Integer orderStatus;
 
     @ManyToOne
     @JoinColumn(name = "user_code", referencedColumnName = "user_code")

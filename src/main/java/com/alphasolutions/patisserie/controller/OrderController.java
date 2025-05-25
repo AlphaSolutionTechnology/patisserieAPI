@@ -21,8 +21,9 @@ public class OrderController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createOrder(@RequestBody OrderRequestDTO order) {
-        orderService.createOrder(order);
-        return ResponseEntity.ok().build();
+        System.out.println(order);
+
+        return ResponseEntity.ok().body(orderService.createOrder(order));
     }
 
     @GetMapping("/get-order")

@@ -30,7 +30,7 @@ public class OrderMapper {
         dto.setQuantity(orderItems.stream().mapToInt(OrderItem::getQuantity).sum());
         dto.setTotalPrice(total);
         dto.setOrderCode(order.getOrderCode());
-        dto.setOrderDate(order.getDateTime().toLocalDate());
+        dto.setOrderDate(order.getDateTime());
         dto.setOrderItems(itemDTOs);
 
         return dto;

@@ -8,6 +8,6 @@ import java.util.List;
 
 @Service
 public interface OrderService {
-    void createOrder(OrderRequestDTO order);
+    OrderResponseDTO createOrder(OrderRequestDTO order);
     List<OrderResponseDTO> getAllOrders(String userCode);
 }

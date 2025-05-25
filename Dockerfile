@@ -23,5 +23,5 @@ COPY --from=builder /app/target/*.jar app.jar
 # Expõe a porta
 EXPOSE 8080
 
-# Comando para executar a aplicação
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+# Comando para executar a aplicação (caminho correto do JAR)
+ENTRYPOINT ["java", "-jar", "app.jar"]

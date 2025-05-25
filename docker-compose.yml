@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    build: . # Constrói a imagem a partir do Dockerfile na pasta atual
+    container_name: patisserie-app
+    ports:
+      - "8080"
+    environment:
+      - DB_URL=jdbc:postgresql://db:5432/patisserie # Nome do serviço do banco de dados e nome do banco
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - PORT=8080
+    depends_on:
+      - db
+    networks:
+      - patisserie-network
+
+  db:
+    image: postgres:15 # Use a versão do PostgreSQL que preferir
+    container_name: patisserie-db
+    ports:
+      - "5432:5432" # Expor a porta do PostgreSQL (opcional para deploy no Railway, mas útil localmente)
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=patisserie
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - patisserie-network
+
+volumes:
+  postgres_data:
+
+networks:
+  patisserie-network:
+    driver: bridge

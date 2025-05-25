@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
         Order thisOrder = orderRepository.save(orderEntity);
 
         List<OrderItem> orderItemList = order.getItems().stream()
-                .map(itemDTO -> orderItemMapper.fromDTO(itemDTO, orderEntity))
+                .map(itemDTO -> orderItemMapper.fromDTO(itemDTO, thisOrder))
                 .toList();
         orderItemRepository.saveAll(orderItemList);
         OrderResponseDTO orderResponseDTO = new OrderResponseDTO();

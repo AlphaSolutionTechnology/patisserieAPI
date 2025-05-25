@@ -1,37 +1,40 @@
 package com.alphasolutions.patisserie.mappers;
 
-import com.alphasolutions.patisserie.model.dto.OrderItemDTO;
 import com.alphasolutions.patisserie.model.dto.OrderResponseDTO;
 import com.alphasolutions.patisserie.model.entities.Order;
 import com.alphasolutions.patisserie.model.entities.OrderItem;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class OrderMapper {
 
     public OrderResponseDTO toResponseDTO(Order order, List<OrderItem> orderItems) {
-        List<OrderItemDTO> itemDTOs = orderItems.stream()
+        // Mapear OrderItems para ProductDTOs
+        List<OrderResponseDTO.ProductDTO> productDTOs = orderItems.stream()
                 .map(item -> {
-                    OrderItemDTO dto = new OrderItemDTO();
-                    dto.setId(item.getProduct().getId());
-                    dto.setQuantity(item.getQuantity());
+                    OrderResponseDTO.ProductDTO dto = new OrderResponseDTO.ProductDTO(
+                            item.getProduct(), // Passa o Product associado
+                            item.getQuantity() // Passa a quantidade do OrderItem
+                    );
                     return dto;
                 })
-                .toList();
+                .collect(Collectors.toList());
 
+        // Calcular o total
         double total = orderItems.stream()
                 .mapToDouble(item -> item.getUnitPrice() * item.getQuantity())
                 .sum();
 
+        // Criar e preencher o OrderResponseDTO
         OrderResponseDTO dto = new OrderResponseDTO();
         dto.setName(order.getUser().getUsername());
-        dto.setQuantity(orderItems.stream().mapToInt(OrderItem::getQuantity).sum());
-        dto.setTotalPrice(total);
         dto.setOrderCode(order.getOrderCode());
         dto.setOrderDate(order.getDateTime());
-        dto.setProducts(itemDTOs);
+        dto.setProducts(productDTOs);
+        dto.setTotalPrice(total);
 
         return dto;
     }

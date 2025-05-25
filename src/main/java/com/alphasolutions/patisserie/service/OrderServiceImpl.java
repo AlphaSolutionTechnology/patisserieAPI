@@ -56,6 +56,9 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> orderItemList = order.getItems().stream()
                 .map(itemDTO -> orderItemMapper.fromDTO(itemDTO, thisOrder))
                 .toList();
+        for (OrderItem orderItem : orderItemList) {
+            System.out.println(orderItem);
+        }
         orderItemRepository.saveAll(orderItemList);
         OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
         orderResponseDTO.setName(orderEntity.getUser().getUsername());
@@ -79,12 +82,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderResponseDTO> getAllOrders(String userCode) {
-        List<Order> orderList = orderRepository.findAllByUser(userRepository.findByUserCode((userCode)));
+        List<Order> orderList = orderRepository.findAllByUser(userRepository.findByUserCode(userCode));
 
         List<OrderResponseDTO> orderResponseList = new ArrayList<>();
-        int i = 0;
-        while (i < orderList.size()) {
-           orderResponseList.add(orderMapper.toResponseDTO(orderList.get(i),orderItemRepository.findByOrderId(orderList.get(i).getId())));
+        for (Order order : orderList) {
+            orderResponseList.add(orderMapper.toResponseDTO(order, orderItemRepository.findByOrderId(order.getId())));
         }
         return orderResponseList;
     }

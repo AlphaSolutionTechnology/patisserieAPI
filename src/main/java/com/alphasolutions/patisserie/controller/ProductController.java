@@ -20,6 +20,7 @@ public class ProductController {
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> productList() {
         return ResponseEntity.ok().body(productRepository.findAll());
+
     }
 
 }

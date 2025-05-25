@@ -15,7 +15,7 @@ public class OrderMapper {
         List<OrderItemDTO> itemDTOs = orderItems.stream()
                 .map(item -> {
                     OrderItemDTO dto = new OrderItemDTO();
-                    dto.setProductId(item.getProduct().getId());
+                    dto.setId(item.getProduct().getId());
                     dto.setQuantity(item.getQuantity());
                     return dto;
                 })

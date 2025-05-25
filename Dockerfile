@@ -1,8 +1,27 @@
+# Use uma imagem base do OpenJDK com Maven para build
+FROM maven:3.8.6-openjdk-17-slim AS builder
+
+# Define o diretório de trabalho
+WORKDIR /app
+
+# Copia os arquivos do projeto (pom.xml e código-fonte)
+COPY pom.xml .
+COPY src ./src
+
+# Executa o build do Maven para gerar o .jar
+RUN mvn clean package -DskipTests
+
+# Etapa final: Usa uma imagem leve do OpenJDK para rodar a aplicação
 FROM openjdk:17-jdk-slim
 
-ARG JAR_FILE=target/*.jar
+# Define o diretório de trabalho
+WORKDIR /app
 
-COPY ${JAR_FILE} app.jar
+# Copia o .jar gerado da etapa de build
+COPY --from=builder /app/target/*.jar app.jar
 
+# Expõe a porta
+EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","/app.jar"]
+# Comando para executar a aplicação
+ENTRYPOINT ["java", "-jar", "/app.jar"]

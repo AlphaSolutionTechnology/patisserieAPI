@@ -23,4 +23,8 @@ public class User {
 
     @Column(name = "user_code",length = 4, unique = true)
     private String userCode;
+
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
+
 }

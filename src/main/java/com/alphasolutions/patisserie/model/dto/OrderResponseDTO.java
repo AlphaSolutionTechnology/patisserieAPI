@@ -26,6 +26,7 @@ public class OrderResponseDTO {
         private String category;
         private String imagePath;
         private Integer quantity;
+        private String description;
 
         public ProductDTO(Product product, Integer quantity) {
             this.id = product.getId();
@@ -34,6 +35,7 @@ public class OrderResponseDTO {
             this.category = product.getCategory();
             this.imagePath = product.getImagePath();
             this.quantity = quantity;
+            this.description = product.getDescription();
         }
     }
 }

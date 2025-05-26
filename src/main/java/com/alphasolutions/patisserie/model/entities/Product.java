@@ -27,5 +27,7 @@ public class Product {
     @Column(name = "image_path", length = 30)
     private String imagePath;
 
+    @Column(name = "description")
+    private String description;
 
 }

@@ -82,6 +82,7 @@ public class OrderServiceImpl implements OrderService {
         orderResponseDTO.setOrderStatus(OrderStatus.preparing.name()); // Usando name() para string
         orderResponseDTO.setOrderDate(orderEntity.getDateTime());
         orderResponseDTO.setProducts(productDTOs);
+        orderResponseDTO.setAddress(orderEntity.getAddress());
 
         // Calcular totalPrice a partir dos OrderItems salvos
         List<OrderItem> savedOrderItems = orderItemRepository.findByOrderId(thisOrder.getId());

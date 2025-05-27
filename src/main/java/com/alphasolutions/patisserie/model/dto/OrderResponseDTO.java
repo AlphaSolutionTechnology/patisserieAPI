@@ -16,6 +16,7 @@ public class OrderResponseDTO {
     private OffsetDateTime orderDate;
     private List<ProductDTO> products;
     private Double totalPrice;
+    private String address;
 
     @Getter
     @Setter

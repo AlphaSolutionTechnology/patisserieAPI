@@ -87,9 +87,8 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> savedOrderItems = orderItemRepository.findByOrderId(thisOrder.getId());
         orderResponseDTO.setTotalPrice(
                 savedOrderItems.stream()
-                        .map(OrderItem::getUnitPrice)
-                        .filter(Objects::nonNull)
-                        .mapToDouble(Double::doubleValue)
+                        .filter(item -> item.getUnitPrice() != null && item.getQuantity() != null)
+                        .mapToDouble(item -> item.getUnitPrice() * item.getQuantity())
                         .sum()
         );
 

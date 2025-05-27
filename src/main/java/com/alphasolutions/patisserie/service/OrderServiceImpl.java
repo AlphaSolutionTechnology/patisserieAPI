@@ -57,7 +57,6 @@ public class OrderServiceImpl implements OrderService {
         orderEntity.setOrderStatus(OrderStatus.preparing.status);
         Order thisOrder = orderRepository.save(orderEntity);
 
-        // Mapear OrderItemDTO para OrderItem e salvar
         List<OrderItem> orderItemList = order.getItems().stream()
                 .map(itemDTO -> orderItemMapper.fromDTO(itemDTO, thisOrder))
                 .toList();
@@ -66,7 +65,6 @@ public class OrderServiceImpl implements OrderService {
         }
         orderItemRepository.saveAll(orderItemList);
 
-        // Mapear para ProductDTO com quantidade
         List<OrderResponseDTO.ProductDTO> productDTOs = new ArrayList<>();
         for (OrderItemDTO itemDTO : order.getItems()) {
             Product product = orderItemMapper.getProductRepository()
@@ -75,7 +73,6 @@ public class OrderServiceImpl implements OrderService {
             productDTOs.add(new OrderResponseDTO.ProductDTO(product, itemDTO.getQuantity()));
         }
 
-        // Criar e preencher o OrderResponseDTO
         OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
         orderResponseDTO.setName(orderEntity.getUser().getUsername());
         orderResponseDTO.setOrderCode(orderEntity.getOrderCode());
@@ -84,7 +81,6 @@ public class OrderServiceImpl implements OrderService {
         orderResponseDTO.setProducts(productDTOs);
         orderResponseDTO.setAddress(orderEntity.getAddress());
 
-        // Calcular totalPrice a partir dos OrderItems salvos
         List<OrderItem> savedOrderItems = orderItemRepository.findByOrderId(thisOrder.getId());
         orderResponseDTO.setTotalPrice(
                 savedOrderItems.stream()

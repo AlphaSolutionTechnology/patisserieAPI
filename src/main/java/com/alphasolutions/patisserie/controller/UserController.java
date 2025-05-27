@@ -1,7 +1,9 @@
 package com.alphasolutions.patisserie.controller;
 
+import com.alphasolutions.patisserie.model.dto.UserDTO;
 import com.alphasolutions.patisserie.model.entities.User;
 import com.alphasolutions.patisserie.model.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -41,6 +44,24 @@ public class UserController {
                 "name", user.getUsername()
         ));
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/create-account")
+    public ResponseEntity<?> create(@RequestBody UserDTO user) {
+        if(userRepository.findUserByPhoneNumber(user.getPhone()) != null){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário já existe");
+        }
+        Random random = new Random();
+        String userCode;
+        do {
+            userCode = Integer.toString(random.nextInt(1000,9999));
+        }while ((userRepository.findUserByUserCode(userCode) != null));
+        User newUser = new User();
+        newUser.setUsername(user.getUsername());
+        newUser.setPassword(user.getPassword());
+        newUser.setPhoneNumber(user.getPhone());
+        userRepository.save(newUser);
+        return ResponseEntity.ok().build();
     }
 
     private User authenticateUser(String phone, String password) {

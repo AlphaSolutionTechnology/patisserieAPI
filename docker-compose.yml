@@ -1,35 +1,40 @@
 version: '3.8'
+
 services:
+  db:
+    image: postgres:17.5-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
   app:
     build: .
+    depends_on:
+      - db
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/yourdb
-      - SPRING_DATASOURCE_USERNAME=youruser
-      - SPRING_DATASOURCE_PASSWORD=yourpassword
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    depends_on:
-      - db
-    networks:
-      - app-network
-
-  db:
-    image: postgres:15
-    environment:
-      - POSTGRES_DB=yourdb
-      - POSTGRES_USER=youruser
-      - POSTGRES_PASSWORD=yourpassword
-    ports:
-      - "5434:5432"  # Changed to 5434 to avoid conflict
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+    entrypoint: ["/usr/local/bin/start-app.sh"]
 
 volumes:
-  pgdata:
+  db_data:
+
+# As variáveis de ambiente devem ser definidas no Railway ou em um arquivo .env (NÃO subir .env para o GitHub)
+# Exemplo de variáveis para Railway:
+# POSTGRES_DB=patisserie
+# POSTGRES_USER=avorio
+# POSTGRES_PASSWORD=xxxxxxx
+# SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/patisserie
+# SPRING_DATASOURCE_USERNAME=avorio
+# SPRING_DATASOURCE_PASSWORD=xxxxxxx
+# SPRING_JPA_HIBERNATE_DDL_AUTO=update 

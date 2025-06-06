@@ -1,5 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 # Inicia a aplicação Java
-exec java -jar /app/app.jar 
+exec java -jar app.jar 

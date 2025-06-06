@@ -3,15 +3,19 @@ builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "java -jar /app/app.jar"
+startCommand = "/docker-entrypoint.sh"
 healthcheckPath = "/api/product/list"
-healthcheckTimeout = 100
+healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
+healthcheckInterval = 30s
+healthcheckStartPeriod = 60s
 
 [env]
 SPRING_DATASOURCE_URL = "jdbc:postgresql://${RAILWAY_PRIVATE_DOMAIN}:5432/${PGDATABASE}"
 SPRING_DATASOURCE_USERNAME = "${PGUSER}"
 SPRING_DATASOURCE_PASSWORD = "${PGPASSWORD}"
 SPRING_JPA_HIBERNATE_DDL_AUTO = "update"
-PORT = "8080" 
+PORT = "8080"
+SERVER_PORT = "8080"
+JAVA_TOOL_OPTIONS = "-Xmx512m -Xms256m" 

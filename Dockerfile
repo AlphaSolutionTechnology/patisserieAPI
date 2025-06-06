@@ -13,9 +13,6 @@ WORKDIR /app
 
 COPY --from=builder /app/target/*.jar app.jar
 
-COPY start-app.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/start-app.sh
-
 USER nobody
 
-ENTRYPOINT ["/usr/local/bin/start-app.sh"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
